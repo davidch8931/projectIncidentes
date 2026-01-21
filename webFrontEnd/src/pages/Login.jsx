@@ -5,7 +5,7 @@ function Login (){
 
     const iniciarSesion = () => {
         
-        navigate("/")
+        navigate("/incidentes")
     }
     return(
         <div>
