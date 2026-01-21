@@ -5,7 +5,6 @@ import AuthService from "../../services/auth"
 function ListadoIncidente() {
     const[incidentes,setIncidentes] = useState([]);
   const[loading,setLoading] = useState([]);
-
   
   const ferchIncidencia = ()=>{
     fetch("")//aqui debo enviar la url del api
@@ -31,6 +30,10 @@ function ListadoIncidente() {
   return (
     <div className="container">
       <h2>Listado de Incidentes</h2>
+      <Link to="/incidentes/nuevo" className="btn btn-success mb-3">
+       Nuevo Incidente
+    </Link>
+
       <table className="table table-striped">
         <thead>
           <tr>
@@ -45,8 +48,6 @@ function ListadoIncidente() {
         </thead>
         <tbody>
           {incidentes.map((v) =>(
-            
-             
              
             <tr key={v.inci_id}>
                 <td>{v.fk_tipo_inci}</td>
