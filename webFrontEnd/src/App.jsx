@@ -4,6 +4,7 @@ import RutaProtegida from "./components/RutaProtegida"
 import Login from "./pages/Login"
 import ListadoIncidente from "./pages/incidente/Listado"
 import NuevoIncidente from "./pages/incidente/Nuevo"
+import ListadoRol from "./pages/rol/Listado"
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
         <Route element={<RutaProtegida/>}>
           <Route path= '/incidentes' element={<ListadoIncidente/>}/>
           <Route path="/incidentes/nuevo" element={<NuevoIncidente/>}/>
+          <Route path="/roles" element={<ListadoRol/>}/>
+          <Route path="/roles/nuevo" element={<NuevoRol/>}/>
+          
         </Route>
       </Routes>
     //</Layout>

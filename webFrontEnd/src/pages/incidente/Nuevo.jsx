@@ -22,7 +22,7 @@ function NuevoIncidente() {
             .then((res) => {
                 if (res.ok) {
                     alert("Incidente Creado");
-                    navigate("/paises");
+                    navigate("/incidencias");
                 } else {
                     alert("Error al crear el incidente");
                 }
