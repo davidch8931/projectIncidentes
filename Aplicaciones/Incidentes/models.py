@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
  
 class Rol(models.Model):
     rol_id=models.AutoField(primary_key=True)
@@ -11,6 +11,20 @@ class Usuario(AbstractUser):
     usu_estado = models.CharField(max_length=20,default='Disponible')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
+    groups = models.ManyToManyField(
+        Group,
+        related_name='usuarios_grupos',   
+        blank=True,
+        help_text='Los grupos a los que pertenece este usuario.',
+        verbose_name='grupos'
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='usuarios_permisos',  
+        blank=True,
+        help_text='Permisos específicos para este usuario.',
+        verbose_name='permisos de usuario'
+    )
     
 class Severidad(models.Model):
     seve_id =models.AutoField(primary_key=True)
