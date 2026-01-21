@@ -3,6 +3,23 @@ import { useNavigate } from "react-router-dom"
 import AuthService from "../../services/auth"
 
 function ListadoIncidente() {
+    const[incidentes,setIncidentes] = useState([]);
+  const[loading,setLoading] = useState([]);
+
+  
+  const ferchIncidencia = ()=>{
+    fetch("")//aqui debo enviar la url del api
+      .then((res)=>res.json())
+      .then((data) =>{
+        setIncidentes(data);
+        setLoading(false);
+      })
+  }
+
+  useEffect(()=>{
+    ferchIncidencia();
+
+  },[])
   const navigate = useNavigate()
 
   const cerrarSesion = () => {
@@ -10,15 +27,49 @@ function ListadoIncidente() {
     navigate("/", { replace: true })
   }
 
+  if(loading) return <p className="text-center">Cargando usuario....</p>
   return (
-    <div>
-      <h1>Página principal de listado de incidentes</h1>
-      
-      <button onClick={cerrarSesion}>
-        Cerrar Sesión
-      </button>
+    <div className="container">
+      <h2>Listado de Incidentes</h2>
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Severidad</th>
+            <th>Descripción</th>
+            <th>Ubicación Latitud</th>
+            <th>Ubicación Longitud</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {incidentes.map((v) =>(
+            
+             
+             
+            <tr key={v.inci_id}>
+                <td>{v.fk_tipo_inci}</td>
+                <td>{v.fk_seve_id}</td>
+                <td>{v.inci_descripcion}</td>
+                <td>{v.inci_latitud}</td>
+                <td>{v.inci_longitud}</td>
+                <td>{v.inci_estado}</td>
+                <td>
+                  <button className="btn btn-sm btn-warning"><i className="bi bi-pencil-square"></i></button>
+                  <button className="btn btn-sm btn-danger"><i className="bi bi-trash"></i></button>
+
+                </td>
+            </tr>
+          
+          ))}
+        </tbody>
+
+      </table>
     </div>
   )
 }
 
 export default ListadoIncidente
+
+ 
