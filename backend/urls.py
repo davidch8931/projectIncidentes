@@ -16,13 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-
 from backend import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('Aplicaciones.Incidentes.urls')),
+
+    # Rutas de la API de la app incidentes
+    # Esto generará URLs como: http://localhost:8000/api/incidentes/
+    path('api/', include('Aplicaciones.Incidentes.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
