@@ -48,3 +48,5 @@ class AsignacionViewSet(viewsets.ModelViewSet):
 class RescatistaAsignacionViewSet(viewsets.ModelViewSet):
     queryset = RescatistaAsignacion.objects.all()
     serializer_class = RescatistaAsignacionSerializer
+    
+    
