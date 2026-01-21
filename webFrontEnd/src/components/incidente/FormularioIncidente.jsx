@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../../api/axios";
+
+
 
 function FormularioIncidente({ datosIniciales, onSubmit }) {
     const [form, setForm] = useState({
@@ -11,8 +14,15 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
         inci_estado: "Pendiente"
     });
 
+    const [tiposIncidente, setTiposIncidente] = useState([]);
+    const [severidades, setSeveridades] = useState([]);
     useEffect(() => {
-  
+        api.get("/tipos-incidentes/")
+            .then(res => setTiposIncidente(res.data));
+
+        api.get("/severidades/")
+            .then(res => setSeveridades(res.data));
+
         if (datosIniciales) {
             setForm(datosIniciales);
         }
@@ -44,8 +54,11 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
                     required
                 >
                     <option value="">Seleccione</option>
-                    <option value="1">Accidente</option>
-                    <option value="2">Incendio</option>
+                    {tiposIncidente.map(t => (
+                        <option key={t.tipo_id} value={t.tipo_id}>
+                            {t.tipo_nombre}
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -58,10 +71,12 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
                     onChange={cambiarValor}
                     required
                 >
-                    <option value="">Seleccione</option>
-                    <option value="1">Baja</option>
-                    <option value="2">Media</option>
-                    <option value="3">Alta</option>
+                      <option value="">Seleccione</option>
+                    {severidades.map(s => (
+                        <option key={s.seve_id} value={s.seve_id}>
+                            {s.seve_nombre}
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -112,8 +127,6 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
                     onChange={cambiarValor}
                 >
                     <option value="Pendiente">Pendiente</option>
-                    <option value="En Proceso">En Proceso</option>
-                    <option value="Resuelto">Resuelto</option>
                 </select>
             </div>
 

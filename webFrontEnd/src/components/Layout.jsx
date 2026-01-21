@@ -1,18 +1,15 @@
 import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
 
-function Layout ({children}){
-
-
-    return (
-        <div className="d-flex">
-              <Sidebar/>
-             <main className="flex grow mb-4"> 
-          
-          {children}
-
-            </main>
-        </div>
-    )
+function Layout() {
+  return (
+    <div style={{ display: "flex" }}>
+      <Sidebar />
+      <div style={{ flex: 1, padding: "20px" }}>
+        <Outlet />  
+      </div>
+    </div>
+  );
 }
 
 export default Layout;

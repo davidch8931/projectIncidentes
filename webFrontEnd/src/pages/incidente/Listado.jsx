@@ -1,7 +1,6 @@
 import { useEffect,useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import api from "../../api/axios"
-import AuthService from "../../services/auth"
 
 function ListadoIncidente() {
     const[incidentes,setIncidentes] = useState([]);
@@ -15,24 +14,27 @@ function ListadoIncidente() {
       })
   }
 
+    const eliminarIncidente = (id) => {
+    if (!window.confirm("¿Desea eliminar el incidente?")) return;
+
+    api.delete(`/incidentes/${id}/`)        
+        .then(() => {
+            alert("Incidente eliminado");
+            fetchIncidencia();
+        });
+};
+
   useEffect(()=>{
     fetchIncidencia();
 
   },[])
   const navigate = useNavigate()
 
-  const cerrarSesion = () => {
-    AuthService.logout()
-    navigate("/", { replace: true })
-  }
-
   if(loading) return <p className="text-center">Cargando incidencias....</p>
   return (
     <div className="container">
       <h2>Listado de Incidentes</h2>
-      <button onClick={cerrarSesion} className="btn btn-danger btn-sm">
-            Cerrar Sesión
-      </button>
+ 
 
       <Link to="/incidentes/nuevo" className="btn btn-success mb-3">
        Nuevo Incidente
@@ -61,8 +63,20 @@ function ListadoIncidente() {
                 <td>{v.inci_longitud}</td>
                 <td>{v.inci_estado}</td>
                 <td>
-                  <button className="btn btn-sm btn-warning"><i className="bi bi-pencil-square"></i></button>
-                  <button className="btn btn-sm btn-danger"><i className="bi bi-trash"></i></button>
+
+  <Link
+                                    to={`/incidentes/editar/${v.inci_id}`}
+                                    className="btn btn-sm btn-warning me-2"
+                                >
+                                    <i className="bi bi-pencil-square"></i>
+                                </Link>
+
+   <button
+                                    className="btn btn-sm btn-danger"
+                                    onClick={() => eliminarIncidente(v.inci_id)}
+                                >
+                                    <i className="bi bi-trash"></i>
+                                </button>
 
                 </td>
             </tr>

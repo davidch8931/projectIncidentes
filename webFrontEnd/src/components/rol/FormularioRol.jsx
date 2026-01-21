@@ -46,7 +46,7 @@ function FormularioRol({ datosIniciales, onSubmit }) {
                 <textarea
                     name="rol_descripcion"
                     className="form-control"
-                    value={form.fk_seve_id}
+                    value={form.rol_descripcion}
                     onChange={cambiarValor}
                     required
                 />

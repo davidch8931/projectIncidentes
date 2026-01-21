@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': 'DbIncidentes',
         'USER': 'postgres',
         #'PASSWORD': 'root',
-        'PASSWORD': 's1st3m@s.@ssssss',
+        'PASSWORD': 's1st3m@s.@',
         'HOST': 'localhost',
         'PORT': '5432',
 

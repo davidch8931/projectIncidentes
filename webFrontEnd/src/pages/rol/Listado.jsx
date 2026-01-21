@@ -7,10 +7,9 @@ function ListadoRol(){
     const[loading,setLoading] = useState([]);
 
     const fetchRol = ()=>{
-    fetch("")//aqui debo enviar la url del api
-      .then((res)=>res.json())
-      .then((data) =>{
-        setRoles(data);
+     api.get("/roles/")
+      .then((response) => {
+        setRoles(response.data);
         setLoading(false);
       })
   }
@@ -19,10 +18,18 @@ function ListadoRol(){
     fetchRol();
 
   },[])
-  const navigate = useNavigate()
 
+    const eliminarRol = (id) => {
+        if (!window.confirm("¿Desea eliminar este recurso?")) return;
 
-  if(loading) return <p className="text-center">Cargando incidencias....</p>
+        api.delete(`/roles/${id}`)
+            .then(() => {
+                alert("Rol eliminado");
+                fetchRol();
+            });
+    };
+
+  if(loading) return <p className="text-center">Cargando roles....</p>
   return (
     <div className="container">
       <h2>Listado de Roles</h2>
@@ -45,8 +52,20 @@ function ListadoRol(){
                 <td>{v.rol_nombre}</td>
                 <td>{v.rol_descripcion}</td>
                 <td>
-                  <button className="btn btn-sm btn-warning"><i className="bi bi-pencil-square"></i></button>
-                  <button className="btn btn-sm btn-danger"><i className="bi bi-trash"></i></button>
+            
+                <Link
+                                    to={`/roles/editar/${v.rol_id}`}
+                                    className="btn btn-sm btn-warning me-2"
+                                >
+                                    <i className="bi bi-pencil-square"></i>
+                                </Link>
+
+                                <button
+                                    className="btn btn-sm btn-danger"
+                                    onClick={() => eliminarRol(v.rol_id)}
+                                >
+                                    <i className="bi bi-trash"></i>
+                                </button>
 
                 </td>
             </tr>
