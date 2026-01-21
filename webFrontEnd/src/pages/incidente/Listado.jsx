@@ -1,5 +1,6 @@
-import { useEffect,useState } from "react" // <--- Importante
-import { useNavigate } from "react-router-dom"
+import { useEffect,useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import api from "../../api/axios"
 import AuthService from "../../services/auth"
 
 function ListadoIncidente() {
@@ -7,10 +8,9 @@ function ListadoIncidente() {
   const[loading,setLoading] = useState([]);
   
   const fetchIncidencia = ()=>{
-    fetch("")//aqui debo enviar la url del api
-      .then((res)=>res.json())
-      .then((data) =>{
-        setIncidentes(data);
+    api.get("/incidentes/")
+      .then((response) => {
+        setIncidentes(response.data);
         setLoading(false);
       })
   }
@@ -30,6 +30,10 @@ function ListadoIncidente() {
   return (
     <div className="container">
       <h2>Listado de Incidentes</h2>
+      <button onClick={cerrarSesion} className="btn btn-danger btn-sm">
+            Cerrar Sesión
+      </button>
+
       <Link to="/incidentes/nuevo" className="btn btn-success mb-3">
        Nuevo Incidente
     </Link>
