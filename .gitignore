@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
+*.pyd
 
 # C extensions
 *.so
@@ -50,3 +53,8 @@ htmlcov/
 
 # Pytest cache
 .pytest_cache/
+
+# Django
+*.log
+local_settings.py
+.env
