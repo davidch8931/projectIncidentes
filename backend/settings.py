@@ -154,5 +154,6 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     # Aqui va la ruta de quien puede hacer peticiones a la API como React
     "http://localhost:8080",
-    "http://127.0.0.1:9000",
+    "http://localhost:5173",
+    
 ]
