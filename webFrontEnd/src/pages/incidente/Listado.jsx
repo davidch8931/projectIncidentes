@@ -6,7 +6,7 @@ function ListadoIncidente() {
     const[incidentes,setIncidentes] = useState([]);
   const[loading,setLoading] = useState([]);
   
-  const ferchIncidencia = ()=>{
+  const fetchIncidencia = ()=>{
     fetch("")//aqui debo enviar la url del api
       .then((res)=>res.json())
       .then((data) =>{
@@ -16,7 +16,7 @@ function ListadoIncidente() {
   }
 
   useEffect(()=>{
-    ferchIncidencia();
+    fetchIncidencia();
 
   },[])
   const navigate = useNavigate()
@@ -26,7 +26,7 @@ function ListadoIncidente() {
     navigate("/", { replace: true })
   }
 
-  if(loading) return <p className="text-center">Cargando usuario....</p>
+  if(loading) return <p className="text-center">Cargando incidencias....</p>
   return (
     <div className="container">
       <h2>Listado de Incidentes</h2>
