@@ -19,12 +19,22 @@ from django.urls import path,include
 from backend import settings
 from django.conf.urls.static import static
 
+# Importaciones para JWT (Login)
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Rutas de la API de la app incidentes
     # Esto generará URLs como: http://localhost:8000/api/incidentes/
     path('api/', include('Aplicaciones.Incidentes.urls')),
+
+    # RUTAS DE AUTENTICACIÓN (con JWT para token)
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # para LOGIN
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
