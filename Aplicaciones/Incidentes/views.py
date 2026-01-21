@@ -3,6 +3,8 @@ from rest_framework import viewsets
 # Importamos todos los modelos y serializers que definimos previamente
 from .models import *
 from .serializers import *
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # --- Catálogos y Usuarios ---
 
@@ -32,6 +34,29 @@ class TipoRecursoViewSet(viewsets.ModelViewSet):
 class IncidenteViewSet(viewsets.ModelViewSet):
     queryset = Incidente.objects.all()
     serializer_class = IncidenteSerializer
+    def perform_create(self, serializer):
+        #guardar en la bdd
+        instancia = serializer.save()
+
+        # enviar mensaje al grupo de WebSocket
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            'incidentes_general', # mismo nombre que esta en consumers.py
+            {
+                'type': 'nuevo_incidente', # mismo nombre de la función en consumers.py
+                'message': {
+                    'accion': 'crear',
+                    'id': instancia.inci_id,
+                    'descripcion': instancia.inci_descripcion,
+                    'latitud': float(instancia.inci_latitud), 
+                    'longitud': float(instancia.inci_longitud),
+                    'estado': instancia.inci_estado,
+                    'tipo': instancia.fk_tipo_inci.tipo_nombre,
+                    'severidad': instancia.fk_seve_id.seve_nombre,
+                    'fecha': str(instancia.fecha_creacion)
+                }
+            }
+        )
 
 class EvidenciaViewSet(viewsets.ModelViewSet):
     queryset = Evidencia.objects.all()
