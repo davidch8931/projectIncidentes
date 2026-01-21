@@ -1,0 +1,52 @@
+name: movil_app
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_launcher_icons: ^0.14.4
+  sqflite: ^2.4.2
+  #http: ^1.1.0
+  dio: ^5.9.0
+  path: ^1.9.1
+  shared_preferences: ^2.5.4
+  google_maps_flutter: ^2.14.0
+  geolocator: ^14.0.2
+  permission_handler: ^12.0.1
+  flutter_local_notifications: ^19.5.0
+  web_socket_channel: ^3.0.3
+  image_picker: ^1.2.1
+  provider: ^6.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/emergencia.png"
+  
+  flutter_lints: ^6.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/
+  #  

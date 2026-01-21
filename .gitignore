@@ -7,7 +7,7 @@ __pycache__/
 *.pyd
 
 #archivo de configuracion credenciales
-backend/settings.py
+settings.py
 
 # C extensions
 *.so
