@@ -17,6 +17,11 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
 
+
+class RescatistaDisponibleViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Usuario.objects.filter(fk_rol__rol_nombre="Rescatista", usu_estado="Disponible")
+    serializer_class = UsuarioSerializer
+
 class SeveridadViewSet(viewsets.ModelViewSet):    
     queryset = Severidad.objects.all()
     serializer_class = SeveridadSerializer

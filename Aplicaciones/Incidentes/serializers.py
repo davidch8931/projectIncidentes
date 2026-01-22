@@ -52,9 +52,21 @@ class UsuarioSerializer(serializers.ModelSerializer):
 # --- Core del Negocio ---
 
 class IncidenteSerializer(serializers.ModelSerializer):
+    tipo_inci_nombre = serializers.CharField(source='fk_tipo_inci.tipo_nombre', read_only=True)
+    severidad_nombre = serializers.CharField(source='fk_seve_id.seve_nombre', read_only=True)
     class Meta:
         model = Incidente
-        fields = '__all__'
+        fields = [
+            'inci_id',
+            'tipo_inci_nombre',
+            'severidad_nombre',
+            'fk_tipo_inci',   
+            'fk_seve_id',     
+            'inci_descripcion',
+            'inci_latitud',
+            'inci_longitud',
+            'inci_estado'
+        ]
 
 class EvidenciaSerializer(serializers.ModelSerializer):
     class Meta:

@@ -63,6 +63,7 @@ class TipoRecurso(models.Model):
 class Recurso(models.Model):
     recur_id =models.AutoField(primary_key=True)
     fk_recur_tipo = models.ForeignKey(TipoRecurso,on_delete=models.RESTRICT)
+    recur_nombre = models.CharField(max_length=50)
     recur_estado = models.CharField(max_length=20,default='Disponible')
     recur_capacidad = models.IntegerField(default=1)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -81,6 +82,7 @@ class RescatistaAsignacion(models.Model):
     fk_asig_id = models.ForeignKey(Asignacion,on_delete=models.CASCADE)
     fk_rescatista_id = models.ForeignKey(Usuario,on_delete=models.CASCADE)
 
+ 
     
     
     

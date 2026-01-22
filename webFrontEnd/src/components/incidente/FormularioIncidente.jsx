@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api/axios";
-
-
+import Mapa from "./Mapa";
 
 function FormularioIncidente({ datosIniciales, onSubmit }) {
     const [form, setForm] = useState({
@@ -92,6 +91,14 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
                 />
             </div>
 
+            <div>
+                <Mapa onSelect={({ lat, lng }) => 
+                    setForm((prev) => ({ 
+                        ...prev,
+                        inci_latitud: parseFloat(lat.toFixed(7)), 
+                         inci_longitud: parseFloat(lng.toFixed(7))
+                        })) } />
+            </div>
             <div className="mb-3">
                 <label className="form-label">Latitud:</label>
                 <input

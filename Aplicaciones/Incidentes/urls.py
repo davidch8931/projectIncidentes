@@ -16,7 +16,11 @@ router.register(r'tipos-recursos', TipoRecursoViewSet)
 
 # usuarios
 router.register(r'usuarios', UsuarioViewSet)
-
+router.register(
+    r'rescatistas-disponibles', 
+    RescatistaDisponibleViewSet, 
+    basename='rescatistas-disponibles'
+)
 
 router.register(r'incidentes', IncidenteViewSet)
 router.register(r'evidencias', EvidenciaViewSet)
