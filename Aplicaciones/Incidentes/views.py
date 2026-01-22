@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 # Importamos todos los modelos y serializers que definimos previamente
 from .models import *
 from .serializers import *
@@ -9,6 +11,9 @@ from rest_framework.response import Response
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets, status
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import WebTokenObtainPairSerializer, MobileTokenObtainPairSerializer
+
  
 # --- Catálogos y Usuarios ---
 
@@ -20,13 +25,25 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     #Al crear/editar, el serializer se encarga de hashear la contraseña.
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
- 
+
+# Vista para login web (React)
+class WebLoginView(TokenObtainPairView):
+    serializer_class = WebTokenObtainPairSerializer
+
+# Vista para login movil Flutter
+class MobileLoginView(TokenObtainPairView):
+    serializer_class = MobileTokenObtainPairSerializer
+
+class RescatistaDisponibleViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Usuario.objects.filter(fk_rol__rol_nombre="Rescatista", usu_estado="Disponible")
+    serializer_class = UsuarioSerializer
+
 class RescatistaDisponibleViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UsuarioSerializer
 
     def get_queryset(self):
         return Usuario.objects.filter(
-            fk_rol__rol_nombre__iexact="rescatista",
+            fk_rol__rol_nombre__iexact="Rescatista",
             usu_estado__iexact="disponible"
         ).exclude(id=self.request.user.id)
 

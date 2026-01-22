@@ -1,3 +1,5 @@
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import serializers
 from .models import *
 
@@ -50,6 +52,36 @@ class UsuarioSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class WebTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Agregamos datos al token encriptado
+        token['rol'] = user.fk_rol.rol_nombre
+        token['username'] = user.username
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        
+        # Devolvemos información extra en el JSON de respuesta
+        data['rol'] = self.user.fk_rol.rol_nombre
+        data['user_id'] = self.user.id
+        data['username'] = self.user.username
+        
+        return data
+
+class MobileTokenObtainPairSerializer(WebTokenObtainPairSerializer):
+    def validate(self, attrs):
+        # Primero ejecuta la validación normal (usuario/pass correctos)
+        data = super().validate(attrs)
+
+        # AHORA VALIDAMOS EL ROL ESTRICTO
+        # Si no es Rescatista, lanzamos error 401
+        if self.user.fk_rol.rol_nombre != 'Rescatista':
+            raise AuthenticationFailed('Acceso denegado: Aplicación exclusiva para Rescatistas.')
+
+        return data
 # --- Core del Negocio ---
 
 class IncidenteSerializer(serializers.ModelSerializer):

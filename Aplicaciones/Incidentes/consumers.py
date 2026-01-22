@@ -1,24 +1,34 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-class IncidenteConsumer(AsyncWebsocketConsumer):
+class IncidentesConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        # Crear un grupo llamado "incidentes_general"
-        self.room_group_name = 'incidentes_general'
-
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
-        await self.accept() # Aceptar conexión
+        # obtenemos el id del usuario
+        query_string = self.scope['query_string'].decode()
+        user_id = None
+        
+        if 'user_id=' in query_string:
+            user_id = query_string.split('user_id=')[1]
+            
+        if user_id:
+            self.room_group_name = f'user_{user_id}'
+            # unirse al grupo privado
+            await self.channel_layer.group_add(
+                self.room_group_name,
+                self.channel_name
+            )
+            await self.accept()
+        else:
+            # si no hay id, rechazamos la conexion
+            await self.close()
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
+        if hasattr(self, 'room_group_name'):
+            await self.channel_layer.group_discard(
+                self.room_group_name,
+                self.channel_name
+            )
 
-    # Recibir mensaje del grupo y enviarlo al React/Flutter
     async def nuevo_incidente(self, event):
         message = event['message']
         await self.send(text_data=json.dumps({

@@ -18,6 +18,9 @@ from django.contrib import admin
 from django.urls import path,include
 from backend import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenRefreshView
+from Aplicaciones.Incidentes.views import WebLoginView, MobileLoginView
+
 
 # Importaciones para JWT (Login)
 from rest_framework_simplejwt.views import (
@@ -33,8 +36,11 @@ urlpatterns = [
     path('api/', include('Aplicaciones.Incidentes.urls')),
 
     # RUTAS DE AUTENTICACIÓN (con JWT para token)
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # para LOGIN
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/', WebLoginView.as_view(), name='token_web'),
+    path('api/token/mobile/', MobileLoginView.as_view(), name='token_mobile'),
+    
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
