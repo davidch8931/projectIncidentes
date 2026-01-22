@@ -37,6 +37,7 @@ function FormularioRol({ datosIniciales, onSubmit }) {
                     value={form.rol_nombre}
                     onChange={cambiarValor}
                     required
+                      readOnly={!!datosIniciales} 
                 />
                   
             </div>

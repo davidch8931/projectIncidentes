@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import FormularioRol from "../../components/rol/FormularioRol";
+import api from "../../api/axios";
+
 
 function NuevoRol() {
    const navigate = useNavigate();
@@ -8,17 +10,30 @@ function NuevoRol() {
             rol_nombre: form.rol_nombre,
             rol_descripcion: form.rol_descripcion
         })
-             .then(() => {
-            alert("Rol Creado");
-            navigate("/roles");
-        })
-        .catch(() => {
-            alert("Error al crear el rol");
-        });
+            .then(() => {
+ 
+  window.iziToast.success({
+    title: "Éxito",
+    message: "Rol creado correctamente",
+    position: "topRight"
+  });
+
+ 
+  navigate("/roles");
+})
+.catch(() => {
+ 
+  window.iziToast.error({
+    title: "Error",
+    message: "No se pudo crear el rol",
+    position: "topRight"
+  });
+});
+
     }
     return (    
         <div className="container">
-            <h2>Agregar Rol</h2>
+ 
             <FormularioRol onSubmit={onSubmit} />
         </div>
     )

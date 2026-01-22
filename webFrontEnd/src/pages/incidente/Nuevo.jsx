@@ -14,17 +14,25 @@ function NuevoIncidente() {
             inci_estado: form.inci_estado,
         })
         .then(() => {
-            alert("Incidente creado");
+            window.iziToast.success({
+                title: "Correcto",
+                message: "Incidente creado con éxito",
+                position: "topRight"
+            });
             navigate("/incidentes");
-        })
-        .catch((error) => {
-            console.error(error);
-            alert("Error al crear el incidente");
-        });
+            })
+            .catch(() => {
+            window.iziToast.error({
+                title: "Error",
+                message: "No se pudo crear el incidente",
+                position: "topRight"
+            });
+            });
+
     };
     return (    
         <div className="container">
-            <h2>Agregar Incidente</h2>
+    
             <FormularioIncidente onSubmit={onSubmit} />
         </div>
     )

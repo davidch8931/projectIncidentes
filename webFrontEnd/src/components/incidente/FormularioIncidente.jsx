@@ -15,6 +15,8 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
 
     const [tiposIncidente, setTiposIncidente] = useState([]);
     const [severidades, setSeveridades] = useState([]);
+ 
+
     useEffect(() => {
         api.get("/tipos-incidentes/")
             .then(res => setTiposIncidente(res.data));
@@ -35,10 +37,14 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
         }));
     }
 
-    const ejecutarAccion = (e) => {
-        e.preventDefault();
-        onSubmit(form);
-    };
+   const ejecutarAccion = (e) => {
+  e.preventDefault();
+
+   
+
+  onSubmit(form);
+};
+
 
     return (
         <form className="card p-4 shadow" onSubmit={ejecutarAccion}>
@@ -92,6 +98,8 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
             </div>
 
             <div>
+                <label className="form-label"> <b>Arrastre y seleccione la ubicación:</b></label>
+
                 <Mapa onSelect={({ lat, lng }) => 
                     setForm((prev) => ({ 
                         ...prev,
@@ -99,6 +107,7 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
                          inci_longitud: parseFloat(lng.toFixed(7))
                         })) } />
             </div>
+            <br />
             <div className="mb-3">
                 <label className="form-label">Latitud:</label>
                 <input
@@ -109,6 +118,7 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
                     value={form.inci_latitud}
                     onChange={cambiarValor}
                     required
+                    readOnly
                 />
             </div>
 
@@ -122,6 +132,7 @@ function FormularioIncidente({ datosIniciales, onSubmit }) {
                     value={form.inci_longitud}
                     onChange={cambiarValor}
                     required
+                    readOnly
                 />
             </div>
 

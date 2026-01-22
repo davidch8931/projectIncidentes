@@ -83,20 +83,21 @@ function Sidebar() {
 
         {/* Tipos de Incidentes */}
         <li className="nav-item mb-2">
-          <span className="text-uppercase small text-secondary">Tipos de Incidente</span>
-          <ul className="nav flex-column ms-3">
-            <li className="nav-item">
-              <Link to="/tipos-incidentes" className="nav-link text-white">
-                <i className="bi bi-list-ul me-2"></i> Listado
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/tipos/incidente/nuevo" className="nav-link text-white">
-                <i className="bi bi-plus-circle me-2"></i> Nuevo
-              </Link>
-            </li>
-          </ul>
-        </li>      
+  <span className="text-uppercase small text-secondary">Tipos de Incidente</span>
+  <ul className="nav flex-column ms-3">
+    <li className="nav-item">
+      <Link to="/tipos-incidentes" className="nav-link text-white">
+        <i className="bi bi-list-ul me-2"></i> Listado
+      </Link>
+    </li>
+    <li className="nav-item">
+      <Link to="/tipos-incidente/nuevo" className="nav-link text-white">
+        <i className="bi bi-plus-circle me-2"></i> Nuevo
+      </Link>
+    </li>
+  </ul>
+</li>
+      
       </ul>
         <button 
         onClick={cerrarSesion} 

@@ -57,7 +57,7 @@ function FormularioTipoRecurso({ datosIniciales, onSubmit }) {
                 <button type="submit" className="btn btn-primary">
                     Guardar
                 </button>
-                <Link to="/tipos/recursos" className="btn btn-secondary ms-2">
+                <Link to="/tipos/recurso" className="btn btn-secondary ms-2">
                     Cancelar
                 </Link>
             </div>

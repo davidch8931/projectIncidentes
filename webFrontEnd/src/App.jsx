@@ -9,15 +9,20 @@ import EditarIncidente from "./pages/incidente/Editar";
 
 import ListadoRol from "./pages/rol/Listado";
 import NuevoRol from "./pages/rol/Nuevo";
+import EditarRol from "./pages/rol/Editar";
 
 import ListadoRecurso from "./pages/rol/Listado";
 import NuevoRecurso from "./pages/rol/Nuevo";
 
 import ListadoTipoRecurso from "./pages/tiporecurso/Listado";
 import NuevoTipoRecurso from "./pages/tiporecurso/Nuevo";
+import EditarTipoRecurso from "./pages/tiporecurso/Editar";
+
+
 
 import ListadoTipoIncidente from "./pages/tipoincidente/Listado";
 import NuevoTipoIncidente from "./pages/tipoincidente/Nuevo";
+import EditarTipoIncidente from "./pages/tipoincidente/Editar";
 
 function App() {
   return (
@@ -34,15 +39,20 @@ function App() {
 
           <Route path="/roles" element={<ListadoRol />} />
           <Route path="/roles/nuevo" element={<NuevoRol />} />
+          <Route path="/roles/editar/:id" element={<EditarRol />} />
+
 
           <Route path="/recursos" element={<ListadoRecurso />} />
           <Route path="/recursos/nuevo" element={<NuevoRecurso />} />
 
           <Route path="/tipos/recurso" element={<ListadoTipoRecurso />} />
           <Route path="/tipos/recurso/nuevo" element={<NuevoTipoRecurso />} />
+          <Route path="/tipos/recurso/editar/:id" element={<EditarTipoRecurso />} />
+
 
           <Route path="/tipos-incidentes" element={<ListadoTipoIncidente />} />
-          <Route path="/tipos/incidente/nuevo" element={<NuevoTipoIncidente />} />
+          <Route path="/tipos-incidente/nuevo" element={<NuevoTipoIncidente />} />
+          <Route path="/tipos-incidentes/editar/:id" element={<EditarTipoIncidente />} />
         </Route>
       </Route>
     </Routes>

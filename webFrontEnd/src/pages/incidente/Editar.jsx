@@ -22,17 +22,31 @@ function EditarIncidente() {
             });
     }, [id]);
 
-    const onSubmit = (form) => {
-        api.put(`/incidentes/${id}/`, form)
-            .then(() => {
-                alert("Incidente actualizado");
-                navigate("/incidentes");  
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Error al actualizar el incidente");
-            });
-    };
+ const onSubmit = (form) => {
+  api.put(`/incidentes/${id}/`, form)
+    .then(() => {
+     
+      window.iziToast.success({
+        title: "Éxito",
+        message: "Incidente actualizado correctamente",
+        position: "topRight"
+      });
+
+   
+      navigate("/incidentes");
+    })
+    .catch((err) => {
+      console.error(err);
+
+  
+      window.iziToast.error({
+        title: "Error",
+        message: "No se pudo actualizar el incidente",
+        position: "topRight"
+      });
+    });
+};
+
 
     if (loading) return <p className="text-center">Cargando incidente...</p>;
 

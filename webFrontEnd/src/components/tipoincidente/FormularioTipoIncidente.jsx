@@ -52,6 +52,8 @@ function FormularioTipoIncidente({ datosIniciales, onSubmit }) {
                     placeholder="Descripción del tipo de incidente"
                     value={form.tipo_descripcion}
                     onChange={cambiarValor}
+                    required
+
                 />
             </div>
 
@@ -59,7 +61,7 @@ function FormularioTipoIncidente({ datosIniciales, onSubmit }) {
                 <button type="submit" className="btn btn-primary">
                     Guardar
                 </button>
-                <Link to="/tipos-incidente" className="btn btn-secondary ms-2">
+                <Link to="/tipos-incidentes" className="btn btn-secondary ms-2">
                     Cancelar
                 </Link>
             </div>

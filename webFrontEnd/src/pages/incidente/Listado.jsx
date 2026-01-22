@@ -28,7 +28,6 @@ function ListadoIncidente() {
   };
 
   const guardarAsignacion = (incidenteId) => {
-  console.log("Asignación guardada, incidente:", incidenteId);
 
   api.patch(`/incidentes/${incidenteId}/`, {
     inci_estado: 'Asignado'
@@ -39,17 +38,68 @@ function ListadoIncidente() {
     });
   };
 
-    const eliminarIncidente = (id) => {
-    if (!window.confirm("¿Desea eliminar el incidente?")) return;
-    
+  const eliminarIncidente = (id) => {
+  window.iziToast.question({
+    timeout: false,
+    close: false,
+    overlay: true,
+    displayMode: "once",
+    title: "Confirmación",
+    message: "¿Desea eliminar este incidente?",
+    position: "center",
+    buttons: [
+      [
+        "<button>SI</button>",
+        async (instance, toast) => {
+          try {
+            await api.delete(`/incidentes/${id}/`);
 
+            window.iziToast.success({
+              title: "Eliminado",
+              message: "Incidente eliminado correctamente",
+              position: "topRight"
+            });
 
-    api.delete(`/incidentes/${id}/`)        
-        .then(() => {
-            alert("Incidente eliminado");
+            
             fetchIncidencia();
-        });
+
+            instance.hide({ transitionOut: "fadeOut" }, toast);
+          } catch (err) {
+            console.error(err);
+            window.iziToast.error({
+              title: "Error",
+              message: "No se pudo eliminar el incidente",
+              position: "topRight"
+            });
+          }
+        }
+      ],
+      [
+        "<button>NO</button>",
+        (instance, toast) => {
+          instance.hide({ transitionOut: "fadeOut" }, toast);
+        }
+      ]
+    ]
+  });
 };
+
+useEffect(() => {
+  fetchIncidencia();
+}, []);
+
+
+useEffect(() => {
+  if ($.fn.DataTable.isDataTable("#tablaIncidentes")) {
+    $("#tablaIncidentes").DataTable().destroy();
+  }
+
+  $("#tablaIncidentes").DataTable({
+    language: {
+      url: "https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json"
+    }
+  });
+}, [incidentes]);
 
   useEffect(()=>{
     fetchIncidencia();
@@ -60,14 +110,18 @@ function ListadoIncidente() {
   if(loading) return <p className="text-center">Cargando incidencias....</p>
   return (
     <div className="container">
-      <h2>Listado de Incidentes</h2>
+    <div className="d-flex justify-content-between align-items-center mb-3">
  
 
-      <Link to="/incidentes/nuevo" className="btn btn-success mb-3">
-       Nuevo Incidente
-    </Link>
+  <Link to="/incidentes/nuevo" className="btn btn-success">
+    <i className="bi bi-plus-circle me-2"></i>
+    Nuevo Incidente
+  </Link>
+</div>
 
-      <table className="table table-striped">
+
+
+   <table id="tablaIncidentes" className="table table-striped table-bordered">  
         <thead>
           <tr>
             <th>Tipo</th>
@@ -90,28 +144,56 @@ function ListadoIncidente() {
                 <td>{v.inci_latitud}</td>
                 <td>{v.inci_longitud}</td>
                 <td>{v.inci_estado}</td>
-                <td>
+            <td>
+                { (v.inci_estado === "Asignado" || v.inci_estado === "Finalizado") ? (
+                  <>
+                    <button className="btn btn-sm btn-secondary me-2" disabled>
+                      <i className="bi bi-pencil-square"></i>
+                    </button>
 
-                <Link  to={`/incidentes/editar/${v.inci_id}`}
-                 className="btn btn-sm btn-warning me-2">
-                <i className="bi bi-pencil-square"></i>
-                </Link>
+                    <button className="btn btn-sm btn-secondary" disabled>
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to={`/incidentes/editar/${v.inci_id}`}
+                      className="btn btn-sm btn-warning me-2"
+                    >
+                      <i className="bi bi-pencil-square"></i>
+                    </Link>
 
-                 <button className="btn btn-sm btn-danger"
-                 onClick={() => eliminarIncidente(v.inci_id)}>
-                  <i className="bi bi-trash"></i>
-                 </button>
-                </td>
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={() => eliminarIncidente(v.inci_id)}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  </>
+                )}
+              </td>
+
+          
                 <td>
-                   {v.inci_estado === "Pendiente" && (
-                  <button
+                  {v.inci_estado === "Pendiente" && (
+                     <button
                     className="btn btn-warning btn-sm"
                     onClick={() => asignarRecursos(v)}
                   >
                     Asignar Recursos
                   </button>
                 )}
+
+                  {v.inci_estado === "Asignado" && (
+                    <span className="badge bg-primary">En proceso</span>
+                  )}
+
+                  {v.inci_estado === "Finalizado" && (
+                    <span className="badge bg-success">Finalizado</span>
+                  )}
                 </td>
+
             </tr>
           
           ))}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import api from "../../api/axios"
 
 function ListadoRol(){
 
@@ -20,7 +21,7 @@ function ListadoRol(){
   },[])
 
     const eliminarRol = (id) => {
-        if (!window.confirm("¿Desea eliminar este recurso?")) return;
+        if (!window.confirm("¿Desea eliminar este rol?")) return;
 
         api.delete(`/roles/${id}`)
             .then(() => {
@@ -32,7 +33,7 @@ function ListadoRol(){
   if(loading) return <p className="text-center">Cargando roles....</p>
   return (
     <div className="container">
-      <h2>Listado de Roles</h2>
+ 
       <Link to="/roles/nuevo" className="btn btn-success mb-3">
        Nuevo Rol
     </Link>
@@ -61,8 +62,7 @@ function ListadoRol(){
                                 </Link>
 
                                 <button
-                                    className="btn btn-sm btn-danger"
-                                    onClick={() => eliminarRol(v.rol_id)}
+                                    className="btn btn-sm btn-secondary"
                                 >
                                     <i className="bi bi-trash"></i>
                                 </button>
