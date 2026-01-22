@@ -27,15 +27,18 @@ function ListadoIncidente() {
     setIncidenteSeleccionado(null);
   };
 
-   const guardarAsignacion = (datos) => {
-    console.log("Asignación guardada:", datos);
- 
-    api.patch(`/incidentes/${datos.incidenteId}/`, { inci_estado: 'Asignado' })
-      .then(() => {
-        fetchIncidencia();
-        cerrarModal();
-      });
+  const guardarAsignacion = (incidenteId) => {
+  console.log("Asignación guardada, incidente:", incidenteId);
+
+  api.patch(`/incidentes/${incidenteId}/`, {
+    inci_estado: 'Asignado'
+  })
+    .then(() => {
+      fetchIncidencia();
+      cerrarModal();
+    });
   };
+
     const eliminarIncidente = (id) => {
     if (!window.confirm("¿Desea eliminar el incidente?")) return;
     

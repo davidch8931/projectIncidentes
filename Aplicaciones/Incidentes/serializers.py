@@ -22,6 +22,7 @@ class TipoRecursoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UsuarioSerializer(serializers.ModelSerializer):
+    fk_rol = RolSerializer(read_only=True)
     class Meta:
         model = Usuario
         # Incluimos los campos estándar de AbstractUser + tus personalizados

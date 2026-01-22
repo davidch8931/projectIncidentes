@@ -5,80 +5,97 @@ function AsignarRecurso({ incidente, onCerrar, onGuardar }) {
   const [recursos, setRecursos] = useState([]);
   const [rescatistas, setRescatistas] = useState([]);
   
-  // Guardamos recursos seleccionados: { recursoId: { cantidad, rescatistas: [] } }
-  const [seleccionados, setSeleccionados] = useState({ recursos: {} });
 
-  // Traer datos de la API
+  const [seleccionados, setSeleccionados] = useState({});
+
+  
   useEffect(() => {
     api.get("/recursos/").then(res => setRecursos(res.data));
     api.get("/rescatistas-disponibles/").then(res => setRescatistas(res.data));
-
-
-
   }, []);
 
-  // Toggle recurso seleccionado
+ 
   const toggleRecurso = (id) => {
-    const recursoId = String(id);
+    const recursoId = String(id); 
     setSeleccionados(prev => {
-      const copy = { ...prev.recursos };
+      const copy = { ...prev };
       if (copy[recursoId]) {
-        delete copy[recursoId]; // deseleccionar
+        delete copy[recursoId];
       } else {
-        copy[recursoId] = { cantidad: 1, rescatistas: [] }; // seleccionar
+        copy[recursoId] = { cantidad: 1, rescatistas: [] }; 
       }
-      return { recursos: copy };
+      return copy;
     });
   };
 
-  // Cambiar cantidad de recurso
+  
   const cambiarCantidad = (id, cantidad) => {
     const recursoId = String(id);
     setSeleccionados(prev => ({
-      recursos: {
-        ...prev.recursos,
-        [recursoId]: {
-          ...prev.recursos[recursoId],
-          cantidad
-        }
+      ...prev,
+      [recursoId]: {
+        ...prev[recursoId],
+        cantidad: Math.max(1, cantidad) 
       }
     }));
   };
 
-  // Toggle rescatista asociado a recurso
+
   const toggleRescatista = (recursoId, rescatistaId) => {
-    recursoId = String(recursoId);
+    const recursoIdStr = String(recursoId);
     setSeleccionados(prev => {
-      const res = prev.recursos[recursoId].rescatistas;
-      const nuevos = res.includes(rescatistaId)
-        ? res.filter(r => r !== rescatistaId)
-        : [...res, rescatistaId];
+      const rescatistasActuales = prev[recursoIdStr]?.rescatistas || [];
+      const nuevosRescatistas = rescatistasActuales.includes(rescatistaId)
+        ? rescatistasActuales.filter(r => r !== rescatistaId)
+        : [...rescatistasActuales, rescatistaId];
 
       return {
-        recursos: {
-          ...prev.recursos,
-          [recursoId]: {
-            ...prev.recursos[recursoId],
-            rescatistas: nuevos
-          }
+        ...prev,
+        [recursoIdStr]: {
+          ...prev[recursoIdStr],
+          rescatistas: nuevosRescatistas
         }
       };
     });
   };
 
-  // Guardar asignaciones
-  const handleGuardar = () => {
-    const payload = Object.entries(seleccionados.recursos).map(
-      ([recursoId, data]) => ({
-        recurso_id: recursoId,
-        cantidad: data.cantidad,
-        rescatistas: data.rescatistas
-      })
-    );
-    onGuardar({ incidenteId: incidente.inci_id, asignaciones: payload });
-  };
+ 
+ const handleGuardar = async () => {
+  if (Object.keys(seleccionados).length === 0) {
+    alert("Debe seleccionar al menos un recurso");
+    return;
+  }
 
-  // Cerrar modal al dar click en backdrop
+  try {
+    for (const [recursoId, data] of Object.entries(seleccionados)) {
+      if (data.rescatistas.length === 0) continue;
+
+      const payload = {
+        fk_inci_id: incidente.inci_id,
+        fk_recur_id: parseInt(recursoId),
+        rescatistas: data.rescatistas
+      };
+
+      console.log("PAYLOAD:", payload);
+
+      await api.post("/asignaciones/", payload);
+    }
+
+    alert("Asignación realizada correctamente");
+    onGuardar(incidente.inci_id);
+    onCerrar();
+
+  } catch (error) {
+    console.error(error);
+    alert(
+      error.response?.data?.detail ||
+      "Error al asignar recursos"
+    );
+  }
+};
+
+
+
   const backdropClick = (e) => {
     if (e.target.classList.contains("modal-backdrop-custom")) onCerrar();
   };
@@ -117,18 +134,24 @@ function AsignarRecurso({ incidente, onCerrar, onGuardar }) {
           >
             <h6>Recursos Disponibles</h6>
             {recursos.map(r => {
-              const recursoSeleccionado = seleccionados.recursos[String(r.id)];
+            
+              const recursoId = r.recur_id || r.id;
+              const recursoIdStr = String(recursoId);
+              const recursoSeleccionado = seleccionados[recursoIdStr];
+              const rescatistasDisponibles = rescatistas;
+
+              
               return (
-                <div key={r.id} className="border p-2 mb-2 rounded">
+                <div key={recursoId} className="border p-2 mb-2 rounded">
                   <div className="form-check">
                     <input
                       type="checkbox"
                       className="form-check-input"
-                      id={`recurso-${r.id}`}
+                      id={`recurso-${recursoId}`}
                       checked={!!recursoSeleccionado}
-                      onChange={() => toggleRecurso(r.id)}
+                      onChange={() => toggleRecurso(recursoId)}
                     />
-                    <label htmlFor={`recurso-${r.id}`} className="form-check-label">
+                    <label htmlFor={`recurso-${recursoId}`} className="form-check-label">
                       {r.recur_nombre} (Disponibles: {r.recur_capacidad})
                     </label>
                   </div>
@@ -141,28 +164,34 @@ function AsignarRecurso({ incidente, onCerrar, onGuardar }) {
                         min="1"
                         max={r.recur_capacidad}
                         value={recursoSeleccionado.cantidad}
-                        onChange={e => cambiarCantidad(r.id, parseInt(e.target.value))}
+                        onChange={e => cambiarCantidad(recursoId, parseInt(e.target.value) || 1)}
                         className="form-control mb-2"
+                        style={{ width: "100px" }}
                       />
 
-                      <h6>Rescatistas Disponibles</h6>
-                      {rescatistas
-                        .filter(res => res.fk_rol.rol_nombre === "Rescatista")
-                        .map(res => (
-                         <div key={`${res.id}-${r.id}`} className="form-check">
+                      <h6 className="mt-3">Rescatistas Disponibles</h6>
+                      {rescatistasDisponibles.length > 0 ? (
+                        rescatistasDisponibles.map(res => {
+                        const estaSeleccionado = recursoSeleccionado.rescatistas.includes(res.id);
 
+                        return (
+                          <div key={`${recursoId}-${res.id}`} className="form-check">
                             <input
                               type="checkbox"
                               className="form-check-input"
-                              id={`rescatista-${res.id}-${r.id}`}
-                              checked={recursoSeleccionado.rescatistas.includes(res.id)}
-                              onChange={() => toggleRescatista(r.id, res.id)}
+                              checked={estaSeleccionado}
+                              onChange={() => toggleRescatista(recursoId, res.id)}
                             />
-                            <label htmlFor={`rescatista-${res.id}-${r.id}`} className="form-check-label">
+                            <label className="form-check-label">
                               {res.username}
                             </label>
                           </div>
-                        ))}
+                        );
+                      })
+
+                      ) : (
+                        <p className="text-muted">No hay rescatistas disponibles</p>
+                      )}
                     </div>
                   )}
                 </div>
