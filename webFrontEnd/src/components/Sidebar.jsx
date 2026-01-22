@@ -10,7 +10,7 @@ function Sidebar() {
   };
   return (
     <div className="bg-dark text-white p-3" style={{ width: "250px", minHeight: "100vh" }}>
-      <h3 className="mb-4">Gestión</h3>
+      <h3 className="mb-4 text-center">Gestión de Incidentes</h3>
       <ul className="nav flex-column">
 
         {/* Incidentes */}
@@ -98,10 +98,10 @@ function Sidebar() {
   </ul>
 </li>
       
-      </ul>
+      </ul >
         <button 
         onClick={cerrarSesion} 
-        className="btn btn-danger mt-auto"
+        className="btn btn-danger mt-auto text-center"
       >
         Cerrar Sesión
       </button>
